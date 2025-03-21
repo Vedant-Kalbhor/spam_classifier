@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from waitress import serve
 import pickle
 import nltk
 from nltk.corpus import stopwords
@@ -7,8 +8,8 @@ from nltk.stem import PorterStemmer
 import string
 
 # Download required NLTK resources
-nltk.download('punkt')
-nltk.download('stopwords')
+# nltk.download('punkt')
+# nltk.download('stopwords')
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS to allow cross-origin requests
@@ -52,4 +53,5 @@ def predict():
     return jsonify({"result": int(result)})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    from waitress import serve  # Production-ready WSGI server
+    serve(app, host="0.0.0.0", port=5000)
