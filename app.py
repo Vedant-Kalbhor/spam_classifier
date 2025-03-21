@@ -1,76 +1,55 @@
-import streamlit as st
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pickle
-import pandas as pd                  
 import nltk
-import string
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer 
+from nltk.stem import PorterStemmer
+import string
 
-                 #read binary mode 
-tfidf=pickle.load(open('vectorizer.pkl','rb'))
-model=pickle.load(open('model.pkl','rb'))
+# Download required NLTK resources
+nltk.download('punkt')
+nltk.download('stopwords')
 
-from sklearn.utils.validation import check_is_fitted
+app = Flask(__name__)
+CORS(app)  # Enable CORS to allow cross-origin requests
 
-try:
-    check_is_fitted(model)
-    print("✅ Model is fitted and ready to use.")
-except:
-    print("❌ Model is NOT fitted. Retrain and save it again.")
+# Load pre-trained model and vectorizer
+tfidf = pickle.load(open('vectorizer.pkl', 'rb'))
+model = pickle.load(open('model.pkl', 'rb'))
 
-
-
+# Function to preprocess text
 def transform_text(text):
-    text=text.lower()
-    text=nltk.word_tokenize(text)
+    text = text.lower()
+    text = nltk.word_tokenize(text)
 
-    y=[]
+    y = [w for w in text if w.isalnum()]  # Remove special characters
 
-    for w in text:
-        if w.isalnum():
-            y.append(w)
-    
-    text=y[:]
-    y.clear()
+    y = [w for w in y if w not in stopwords.words('english') and w not in string.punctuation]
 
-    for w in text:
-        if w not in stopwords.words('english') and w not in string.punctuation:
-            y.append(w)
-
-    text=y[:]
-    y.clear()
     stemmer = PorterStemmer()
-    for w in text:
-        y.append(stemmer.stem(w))
+    y = [stemmer.stem(w) for w in y]
 
     return " ".join(y)
 
+# API endpoint to classify text
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.json
+    input_text = data.get("text", "")
 
+    if not input_text.strip():
+        return jsonify({"error": "Empty text provided"}), 400
 
-# with open('transform_text.pkl','rb') as f:
-#     transform_text=pickle.load(f)
+    # 1. Preprocess text
+    transformed_sms = transform_text(input_text)
 
-st.title("Email Spam Classifier")
+    # 2. Vectorize text
+    vector_input = tfidf.transform([transformed_sms])
 
-input_sms=st.text_area("Enter the message")
-
-
-if st.button('Predict'):
-    #1.Preprocess
-    transformed_sms=transform_text(input_sms)
-
-    #2.Vectorize
-    vector_input=tfidf.transform([transformed_sms])
-
-    #3.Predict
-    #model.fit(vector_input)
+    # 3. Predict
     result = model.predict(vector_input)[0]
 
-    #4.Display
-    if result ==1:
-        st.header("SPAM")
-    else:
-        st.header("NOT SPAM")
+    return jsonify({"result": int(result)})
 
-
-
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000, debug=True)

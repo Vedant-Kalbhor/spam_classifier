@@ -1,16 +1,22 @@
 {
-    "manifest_version": 3,
-    "name": "Email Spam Classifier",
-    "version": "1.0",
-    "description": "A Chrome extension to classify emails as SPAM or NOT SPAM.",
-    "permissions": ["storage"],
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
-        "16": "spam.png",
-        "48": "spam.png",
-        "128": "spam.png"
-      }
+  "manifest_version": 3,
+  "name": "Email Spam Classifier",
+  "version": "1.0",
+  "description": "A Chrome extension to classify emails as SPAM or NOT SPAM.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "https://vedant-kalbhor-spam-classifier-app-8otsrp.streamlit.app/"
+  ],
+  "host_permissions": [
+    "https://vedant-kalbhor-spam-classifier-app-8otsrp.streamlit.app/"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "spam.png",
+      "48": "spam.png",
+      "128": "spam.png"
     }
   }
-  
+}
