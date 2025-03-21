@@ -6,6 +6,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import string
+import os
 
 # Download required NLTK resources
 # nltk.download('punkt')
@@ -52,6 +53,11 @@ def predict():
 
     return jsonify({"result": int(result)})
 
+@app.route('/')
+def home():
+    return "Spam Classifier API is running!"
+
 if __name__ == '__main__':
-    from waitress import serve  # Production-ready WSGI server
-    serve(app, host="0.0.0.0", port=5000)
+    port = int(os.environ.get('PORT', 10000))  # Default to 10000
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=port)
