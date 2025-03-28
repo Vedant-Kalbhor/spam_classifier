@@ -7,12 +7,12 @@ document.getElementById("checkSpam").addEventListener("click", function () {
         return;
     }
 
-    // Replace this URL with your deployed Flask API endpoint
-    let apiUrl = "https://your-flask-api.onrender.com/predict"; 
+    
+    let apiUrl = "https://spam-classifier-apji.onrender.com/predict"; 
 
     fetch(apiUrl, {
         method: "POST",
-        mode: "cors",  // Allow cross-origin requests
+        mode: "cors", 
         headers: {
             "Content-Type": "application/json"
         },
