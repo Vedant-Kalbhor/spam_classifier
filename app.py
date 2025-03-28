@@ -36,28 +36,36 @@ def transform_text(text):
 # API endpoint to classify text
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.json
-    input_text = data.get("text", "")
+    try:
+        data = request.json
+        input_text = data.get("text", "")
 
-    if not input_text.strip():
-        return jsonify({"error": "Empty text provided"}), 400
+        if not input_text.strip():
+            return jsonify({"error": "Empty text provided"}), 400
 
-    # 1. Preprocess text
-    transformed_sms = transform_text(input_text)
+        # 1. Preprocess text
+        transformed_sms = transform_text(input_text)
 
-    # 2. Vectorize text
-    vector_input = tfidf.transform([transformed_sms])
+        # 2. Vectorize text
+        vector_input = tfidf.transform([transformed_sms])
 
-    # 3. Predict
-    result = model.predict(vector_input)[0]
+        # 3. Predict
+        result = model.predict(vector_input)[0]
 
-    return jsonify({"result": int(result)})
+        return jsonify({"result": int(result)})
 
-@app.route('/')
+    except Exception as e:
+        print("Error during prediction:", e)
+        return jsonify({"error": "Internal Server Error"}), 500
+
+@app.route('/',methods=['GET'])
 def home():
-    return "Spam Classifier API is running!"
+    return "Spam Classifier API is running locallly !"
+
+# if __name__ == '__main__':
+#     port = int(os.environ.get('PORT', 5000 ,debug=True))  # Default to 10000
+#     from waitress import serve
+#     serve(app, host="0.0.0.0", port=port)
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))  # Default to 10000
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=port)
+    app.run(host="127.0.0.1", port=5000, debug=True)  # Local development

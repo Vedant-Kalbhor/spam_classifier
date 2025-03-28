@@ -6,13 +6,11 @@
   "permissions": [
     "storage",
     "activeTab",
-    "https://vedant-kalbhor-spam-classifier-app-8otsrp.streamlit.app/",
-    "https://spam-classifier-apji.onrender.com/predict"
+    "http://127.0.0.1:5000/"
+
   ],
   "host_permissions": [
-    "https://vedant-kalbhor-spam-classifier-app-8otsrp.streamlit.app/",
-    "https://spam-classifier-apji.onrender.com/"
-
+    "http://127.0.0.1:5000/"
   ],
   "action": {
     "default_popup": "popup.html",

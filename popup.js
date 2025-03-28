@@ -8,7 +8,7 @@ document.getElementById("checkSpam").addEventListener("click", function () {
     }
 
     
-    let apiUrl = "https://spam-classifier-apji.onrender.com/predict"; 
+    let apiUrl = "http://127.0.0.1:5000/predict"; 
 
     fetch(apiUrl, {
         method: "POST",
