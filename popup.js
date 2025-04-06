@@ -26,10 +26,10 @@ document.getElementById("checkSpam").addEventListener("click", function () {
     })
     .then(data => {
         if (data.result === 1) {
-            resultDiv.innerHTML = "🚨 SPAM";
+            resultDiv.innerHTML = "🚨 SPAM 🚨";
             resultDiv.style.color = "red";
         } else {
-            resultDiv.innerHTML = "✅ NOT SPAM";
+            resultDiv.innerHTML = "✅ NOT SPAM ✅";
             resultDiv.style.color = "green";
         }
     })
