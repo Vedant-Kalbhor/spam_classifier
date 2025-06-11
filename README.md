@@ -10,3 +10,6 @@ else can load as extension in browser using manifest.json
 
 
 Use deploy.py for deploying
+
+
+Live Demo:https://spamclassifier-gyyltpzkkdsxzntmcljdwx.streamlit.app/
